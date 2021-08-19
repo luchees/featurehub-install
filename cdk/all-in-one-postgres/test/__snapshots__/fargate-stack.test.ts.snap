@@ -1,0 +1,522 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Featurehub fargate Stack snapshot 1`] = `
+Object {
+  "Outputs": Object {
+    "featurehubFargateLoadBalancerDNS9CBC8007": Object {
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "featurehubLoadBalancerDFF2FDB0",
+          "DNSName",
+        ],
+      },
+    },
+    "featurehubFargateServiceURLA7F7E567": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "http://",
+            Object {
+              "Fn::GetAtt": Array [
+                "featurehubLoadBalancerDFF2FDB0",
+                "DNSName",
+              ],
+            },
+          ],
+        ],
+      },
+    },
+  },
+  "Resources": Object {
+    "featurehubContainerLogGroup8540B674": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "LogGroupName": "/ecs/dev-featurehub",
+        "RetentionInDays": 731,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "featurehubEcsClusterF335BC98": Object {
+      "Properties": Object {
+        "ClusterName": "dev-featurehub-cluster",
+        "ClusterSettings": Array [
+          Object {
+            "Name": "containerInsights",
+            "Value": "enabled",
+          },
+        ],
+      },
+      "Type": "AWS::ECS::Cluster",
+    },
+    "featurehubFargateServiceA22EA68F": Object {
+      "DependsOn": Array [
+        "featurehubLoadBalancerPublicListenerECSGroup09533230",
+        "featurehubLoadBalancerPublicListenerB6F0D687",
+      ],
+      "Properties": Object {
+        "Cluster": Object {
+          "Ref": "featurehubEcsClusterF335BC98",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "DesiredCount": 2,
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 300,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "dev-featurehub",
+            "ContainerPort": 8085,
+            "TargetGroupArn": Object {
+              "Ref": "featurehubLoadBalancerPublicListenerECSGroup09533230",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "featurehubFargateServiceSecurityGroupC773E7F0",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Fn::ImportValue": "MyStack:ExportsOutputRefMyVpcPrivateSubnet1Subnet5057CF7EBB23EA1E",
+              },
+              Object {
+                "Fn::ImportValue": "MyStack:ExportsOutputRefMyVpcPrivateSubnet2Subnet0040C983A26C73F6",
+              },
+            ],
+          },
+        },
+        "PlatformVersion": "1.4.0",
+        "ServiceName": "dev-featurehub-fargate",
+        "TaskDefinition": Object {
+          "Ref": "featurehubTaskDef353B2C82",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "featurehubFargateServiceSecurityGroupC773E7F0": Object {
+      "Properties": Object {
+        "GroupDescription": "MyFargateStack/featurehubFargate/Service/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "MyStack:ExportsOutputRefMyVpcF9F0CA6FBC8737E9",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "featurehubFargateServiceSecurityGroupfromMyFargateStackfeaturehubLoadBalancerSecurityGroup59D0DFCB8085DAE252DC": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8085,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "featurehubFargateServiceSecurityGroupC773E7F0",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "featurehubLoadBalancerSecurityGroup35E8B780",
+            "GroupId",
+          ],
+        },
+        "ToPort": 8085,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "featurehubFargateServiceTaskCountTargetD855076C": Object {
+      "Properties": Object {
+        "MaxCapacity": 8,
+        "MinCapacity": 2,
+        "ResourceId": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "service/",
+              Object {
+                "Ref": "featurehubEcsClusterF335BC98",
+              },
+              "/",
+              Object {
+                "Fn::GetAtt": Array [
+                  "featurehubFargateServiceA22EA68F",
+                  "Name",
+                ],
+              },
+            ],
+          ],
+        },
+        "RoleARN": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":iam::",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+            ],
+          ],
+        },
+        "ScalableDimension": "ecs:service:DesiredCount",
+        "ServiceNamespace": "ecs",
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+    },
+    "featurehubFargateServiceTaskCountTargetfeaturehubCpuScaling1391631C": Object {
+      "Properties": Object {
+        "PolicyName": "dev-featurehub-cpu-scaling",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "featurehubFargateServiceTaskCountTargetD855076C",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ECSServiceAverageCPUUtilization",
+          },
+          "ScaleInCooldown": 60,
+          "ScaleOutCooldown": 60,
+          "TargetValue": 80,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "featurehubFargateServiceTaskCountTargetfeaturehubMemScalingA551CA28": Object {
+      "Properties": Object {
+        "PolicyName": "dev-featurehub-mem-scaling",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "featurehubFargateServiceTaskCountTargetD855076C",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ECSServiceAverageMemoryUtilization",
+          },
+          "ScaleInCooldown": 60,
+          "ScaleOutCooldown": 60,
+          "TargetValue": 80,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "featurehubLoadBalancerDFF2FDB0": Object {
+      "Properties": Object {
+        "LoadBalancerAttributes": Array [
+          Object {
+            "Key": "deletion_protection.enabled",
+            "Value": "false",
+          },
+        ],
+        "Name": "dev-featurehub-lb",
+        "Scheme": "internet-facing",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "featurehubLoadBalancerSecurityGroup35E8B780",
+              "GroupId",
+            ],
+          },
+        ],
+        "Subnets": Array [
+          Object {
+            "Fn::ImportValue": "MyStack:ExportsOutputRefMyVpcPublicSubnet1SubnetF6608456AB60A910",
+          },
+          Object {
+            "Fn::ImportValue": "MyStack:ExportsOutputRefMyVpcPublicSubnet2Subnet492B6BFBA5DEC6B5",
+          },
+        ],
+        "Type": "application",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "featurehubLoadBalancerPublicListenerB6F0D687": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "featurehubLoadBalancerPublicListenerECSGroup09533230",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "featurehubLoadBalancerDFF2FDB0",
+        },
+        "Port": 80,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "featurehubLoadBalancerPublicListenerECSGroup09533230": Object {
+      "Properties": Object {
+        "HealthCheckEnabled": true,
+        "HealthCheckPath": "/metric/health/readyness",
+        "HealthCheckPort": "8085",
+        "Matcher": Object {
+          "HttpCode": "200",
+        },
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "true",
+          },
+          Object {
+            "Key": "stickiness.type",
+            "Value": "lb_cookie",
+          },
+          Object {
+            "Key": "stickiness.lb_cookie.duration_seconds",
+            "Value": "86400",
+          },
+        ],
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Fn::ImportValue": "MyStack:ExportsOutputRefMyVpcF9F0CA6FBC8737E9",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "featurehubLoadBalancerSecurityGroup35E8B780": Object {
+      "Properties": Object {
+        "GroupDescription": "Automatically created Security Group for ELB MyFargateStackfeaturehubLoadBalancer9951DB01",
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 80",
+            "FromPort": 80,
+            "IpProtocol": "tcp",
+            "ToPort": 80,
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "MyStack:ExportsOutputRefMyVpcF9F0CA6FBC8737E9",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "featurehubLoadBalancerSecurityGrouptoMyFargateStackfeaturehubFargateServiceSecurityGroup7B9AEC198085CDD2A178": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "featurehubFargateServiceSecurityGroupC773E7F0",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8085,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "featurehubLoadBalancerSecurityGroup35E8B780",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8085,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "featurehubTaskDef353B2C82": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "UID",
+                "Value": "999",
+              },
+              Object {
+                "Name": "GID",
+                "Value": "999",
+              },
+              Object {
+                "Name": "DB.URL",
+                "Value": "jdbc:postgresql://featurehub.database.com:8099/featurehub",
+              },
+              Object {
+                "Name": "DB.USERNAME",
+                "Value": "featurehub",
+              },
+              Object {
+                "Name": "JERSEY.CORS.HEADERS",
+                "Value": "X-Requested-With,Authorization,Content-type,Accept-Version,Content-MD5,CSRF-Token,x-ijt,cache-control,x-featurehub,Baggage",
+              },
+              Object {
+                "Name": "REGISTER.URL",
+                "Value": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "http://",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "featurehubLoadBalancerDFF2FDB0",
+                          "DNSName",
+                        ],
+                      },
+                      "/register-url?token=%s",
+                    ],
+                  ],
+                },
+              },
+            ],
+            "Essential": true,
+            "Image": "featurehub/party-server:1.4.1",
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "featurehubContainerLogGroup8540B674",
+                },
+                "awslogs-region": Object {
+                  "Ref": "AWS::Region",
+                },
+                "awslogs-stream-prefix": "dev-featurehub",
+              },
+            },
+            "Name": "dev-featurehub",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 8085,
+                "Protocol": "tcp",
+              },
+            ],
+            "Secrets": Array [
+              Object {
+                "Name": "DB.PASSWORD",
+                "ValueFrom": Object {
+                  "Fn::ImportValue": "MyStack:ExportsOutputRefMySecret8FE80B5183540F68",
+                },
+              },
+            ],
+          },
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "featurehubTaskDefExecutionRoleF272870F",
+            "Arn",
+          ],
+        },
+        "Family": "dev-featurehub-taskdef",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "featurehubTaskDefTaskRole3E05763E",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "featurehubTaskDefExecutionRoleDefaultPolicyC8957E70": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "featurehubContainerLogGroup8540B674",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::ImportValue": "MyStack:ExportsOutputRefMySecret8FE80B5183540F68",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "featurehubTaskDefExecutionRoleDefaultPolicyC8957E70",
+        "Roles": Array [
+          Object {
+            "Ref": "featurehubTaskDefExecutionRoleF272870F",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "featurehubTaskDefExecutionRoleF272870F": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "featurehubTaskDefTaskRole3E05763E": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+}
+`;

@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Featurehub db Stack snapshot 1`] = `
+Object {
+  "Resources": Object {
+    "FeaturehubDatabaseF1C6C543": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "AllocatedStorage": "100",
+        "CopyTagsToSnapshot": true,
+        "DBInstanceClass": "db.t3.medium",
+        "DBInstanceIdentifier": "dev-featurehub-db",
+        "DBName": "featurehub",
+        "DBSubnetGroupName": Object {
+          "Ref": "FeaturehubDatabaseSubnetGroup26A5967D",
+        },
+        "DeletionProtection": true,
+        "Engine": "postgres",
+        "EngineVersion": "13.3",
+        "MasterUserPassword": "password123",
+        "MasterUsername": "dbUser",
+        "PubliclyAccessible": false,
+        "StorageType": "gp2",
+        "VPCSecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "FeaturehubDatabaseSecurityGroupE2302E5B",
+              "GroupId",
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::RDS::DBInstance",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "FeaturehubDatabaseSecurityGroupE2302E5B": Object {
+      "Properties": Object {
+        "GroupDescription": "Security group for FeaturehubDatabase database",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": Object {
+              "Fn::ImportValue": "MyStack:ExportsOutputFnGetAttMyVpcF9F0CA6FCidrBlockED614C74",
+            },
+            "Description": "Allow Access to featureHub database port",
+            "FromPort": 5432,
+            "IpProtocol": "tcp",
+            "ToPort": 5432,
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "MyStack:ExportsOutputRefMyVpcF9F0CA6FBC8737E9",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "FeaturehubDatabaseSubnetGroup26A5967D": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "DBSubnetGroupDescription": "Subnet group for FeaturehubDatabase database",
+        "SubnetIds": Array [],
+      },
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+  },
+}
+`;

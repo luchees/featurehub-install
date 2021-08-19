@@ -77,3 +77,12 @@ metric*.log
 
 released-pom.xml
 node-js
+
+
+# AWS CDK - Typescript
+node_modules
+cdk.out
+cdk/**/*.d.ts
+cdk/**/*.js
+!cdk/**/jest.config.js
+tsconfig.tsbuildinfo

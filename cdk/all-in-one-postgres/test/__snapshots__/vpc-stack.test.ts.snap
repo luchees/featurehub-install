@@ -1,0 +1,391 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Featurehub vpc Stack snapshot 1`] = `
+Object {
+  "Resources": Object {
+    "devVPC1AA5A1CF": Object {
+      "Properties": Object {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "devVPCIGWE80F99AC": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "devVPCPrivateSubnet1DefaultRouteED6B2E94": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "devVPCPublicSubnet1NATGatewayAC901F3E",
+        },
+        "RouteTableId": Object {
+          "Ref": "devVPCPrivateSubnet1RouteTable94C03E5A",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "devVPCPrivateSubnet1RouteTable94C03E5A": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "devVPC1AA5A1CF",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "devVPCPrivateSubnet1RouteTableAssociationAC478763": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "devVPCPrivateSubnet1RouteTable94C03E5A",
+        },
+        "SubnetId": Object {
+          "Ref": "devVPCPrivateSubnet1SubnetE87A13E1",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "devVPCPrivateSubnet1SubnetE87A13E1": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            0,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.128.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "devVPC1AA5A1CF",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "devVPCPrivateSubnet2DefaultRoute2E1F9DE4": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "devVPCPublicSubnet2NATGateway667CA9BE",
+        },
+        "RouteTableId": Object {
+          "Ref": "devVPCPrivateSubnet2RouteTable58846670",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "devVPCPrivateSubnet2RouteTable58846670": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "devVPC1AA5A1CF",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "devVPCPrivateSubnet2RouteTableAssociationA10B1144": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "devVPCPrivateSubnet2RouteTable58846670",
+        },
+        "SubnetId": Object {
+          "Ref": "devVPCPrivateSubnet2Subnet1CEB740F",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "devVPCPrivateSubnet2Subnet1CEB740F": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            1,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.192.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "devVPC1AA5A1CF",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "devVPCPublicSubnet1DefaultRouteDCEC8BBC": Object {
+      "DependsOn": Array [
+        "devVPCVPCGW6D377A17",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "devVPCIGWE80F99AC",
+        },
+        "RouteTableId": Object {
+          "Ref": "devVPCPublicSubnet1RouteTable1A216D76",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "devVPCPublicSubnet1EIP9AD09B43": Object {
+      "Properties": Object {
+        "Domain": "vpc",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "devVPCPublicSubnet1NATGatewayAC901F3E": Object {
+      "Properties": Object {
+        "AllocationId": Object {
+          "Fn::GetAtt": Array [
+            "devVPCPublicSubnet1EIP9AD09B43",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": Object {
+          "Ref": "devVPCPublicSubnet1Subnet5E7031F3",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "devVPCPublicSubnet1RouteTable1A216D76": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "devVPC1AA5A1CF",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "devVPCPublicSubnet1RouteTableAssociation91008A4E": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "devVPCPublicSubnet1RouteTable1A216D76",
+        },
+        "SubnetId": Object {
+          "Ref": "devVPCPublicSubnet1Subnet5E7031F3",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "devVPCPublicSubnet1Subnet5E7031F3": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            0,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.0.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "devVPC1AA5A1CF",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "devVPCPublicSubnet2DefaultRouteF43440BE": Object {
+      "DependsOn": Array [
+        "devVPCVPCGW6D377A17",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "devVPCIGWE80F99AC",
+        },
+        "RouteTableId": Object {
+          "Ref": "devVPCPublicSubnet2RouteTableFA06D055",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "devVPCPublicSubnet2EIP46AEB48F": Object {
+      "Properties": Object {
+        "Domain": "vpc",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PublicSubnet2",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "devVPCPublicSubnet2NATGateway667CA9BE": Object {
+      "Properties": Object {
+        "AllocationId": Object {
+          "Fn::GetAtt": Array [
+            "devVPCPublicSubnet2EIP46AEB48F",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": Object {
+          "Ref": "devVPCPublicSubnet2Subnet88BE79F5",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PublicSubnet2",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "devVPCPublicSubnet2RouteTableAssociation5F050B60": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "devVPCPublicSubnet2RouteTableFA06D055",
+        },
+        "SubnetId": Object {
+          "Ref": "devVPCPublicSubnet2Subnet88BE79F5",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "devVPCPublicSubnet2RouteTableFA06D055": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "devVPC1AA5A1CF",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "devVPCPublicSubnet2Subnet88BE79F5": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            1,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.64.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestVpcStack/dev-VPC/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "devVPC1AA5A1CF",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "devVPCVPCGW6D377A17": Object {
+      "Properties": Object {
+        "InternetGatewayId": Object {
+          "Ref": "devVPCIGWE80F99AC",
+        },
+        "VpcId": Object {
+          "Ref": "devVPC1AA5A1CF",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+  },
+}
+`;
